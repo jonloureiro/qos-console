@@ -21,9 +21,11 @@ export const links: LinksFunction = () => [
   { rel: "icon", href: "/favicon-16x16.png", type: "image/png", sizes: "16x16" },
 ]
 
+
 export const meta: MetaFunction = () => {
-  return { title: "New Remix App" };
+  return { title: "QoS Console" };
 };
+
 
 export default function App() {
   return (
@@ -34,7 +36,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="absolute inset-0">
         <Outlet />
         <ScrollRestoration />
         <Scripts />
