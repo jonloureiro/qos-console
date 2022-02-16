@@ -1,5 +1,5 @@
 import { DynamoDBClient, ScanCommand } from "@aws-sdk/client-dynamodb";
-import { json, LoaderFunction, useLoaderData } from "remix";
+import { json, LinksFunction, LoaderFunction, useLoaderData } from "remix";
 
 type Item = {
   hora: {
@@ -18,6 +18,8 @@ type Item = {
     S: string
   }
 }
+
+type Result = [number, number, number]
 
 export const loader: LoaderFunction = async () => {
   const client = new DynamoDBClient({
@@ -38,25 +40,46 @@ export const loader: LoaderFunction = async () => {
   })
   try {
     const results = await client.send(command);
-    return json({ items: results.Items ?? [] }, 200)
+    const items = (results.Items as Item[]) ?? []
+
+    const qos = items.reduce((previousValue, currentValue) => {
+      switch (currentValue.qos.S) {
+        case "RUIM":
+          previousValue[0]++
+          return previousValue
+        case "REGULAR":
+          previousValue[1]++
+          return previousValue
+        case "EXCELENTE":
+          previousValue[2]++
+          return previousValue
+        default:
+          return previousValue
+      }
+    }, [0, 0, 0])
+
+    return json({
+      // items: results.Items ?? [],
+      result: qos
+    }, 200)
   } catch (err) {
     return json({ error: err }, 500)
   }
 }
 
 export default function IndexPage() {
-  const { items } = useLoaderData<{ items: Item[] }>()
+  const { result } = useLoaderData<{
+    // items: Item[],
+    result: Result
+  }>()
 
   return (
     <>
       <div>QoS Console</div>
-      <ul>
-        {
-          items.map((item, index) => (
-            <li key={index + ''}>{item.qos.S}</li>
-          ))
-        }
-      </ul>
+      <h2>{result}</h2>
+      <div className="h-full">
+
+      </div>
     </>
   );
 }
