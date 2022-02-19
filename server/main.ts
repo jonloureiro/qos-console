@@ -1,11 +1,13 @@
 import { Handler, HandlerEvent, HandlerContext } from '@netlify/functions'
 import * as Eta from 'eta'
 import { resolve } from 'path'
-import cookie from 'cookie'
+import users from '../data/users'
+
 
 Eta.configure({
   views: resolve('views')
 })
+
 
 const main = async (event: HandlerEvent, context: HandlerContext) => {
   if (event.path === '/login' && event.httpMethod === 'GET') {
@@ -23,38 +25,40 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
       errorMessage: 'Tente novamente'
     }
 
-    const [namestring, passwordstring] = decodeURIComponent(event.body).split('&')
-    const [, name] = namestring.split('=')
+    const [emailstring, passwordstring] = decodeURIComponent(event.body).split('&')
+    const [, email] = emailstring.split('=')
     const [, password] = passwordstring.split('=')
 
-    console.log(name, password);
-    if (name === 't@t' && password === 't') return {
+    const user = users.find(user => user.email === email)
+
+    if (user && user.password === password) return {
+      // TODO: criar cookie
       statusCode: 200,
       headers: {
-        'Set-Cookie': cookie.serialize('__session', 'user', {
-          secure: process.env.NODE_ENV !== 'development',
-          httpOnly: true,
-          maxAge: 3600,
-        }),
+        // 'Set-Cookie': cookie.serialize('__session', 'user', {
+        //   secure: process.env.NODE_ENV !== 'development',
+        //   httpOnly: true,
+        //   maxAge: 3600,
+        // }),
       },
       body: await Eta.renderFile('redirect.eta', { redirect: '/' }) as string,
     }
 
-
     return {
-      statusCode: 200,
-      body: await Eta.renderFile('login.eta', {}) as string,
+      statusCode: 401,
+      body: await Eta.renderFile('login.eta', { errorMessage: 'Email ou senha incorretos' }) as string,
     }
   }
 
   if (event.path === '/logout' && event.httpMethod === 'POST') return {
+    // TODO: deletar cookie
     statusCode: 200,
     headers: {
-      'Set-Cookie': cookie.serialize('__session', '', {
-        secure: process.env.NODE_ENV !== 'development',
-        httpOnly: true,
-        maxAge: 0,
-      }),
+      // 'Set-Cookie': cookie.serialize('__session', '', {
+      //   secure: process.env.NODE_ENV !== 'development',
+      //   httpOnly: true,
+      //   maxAge: 0,
+      // }),
     },
     body: await Eta.renderFile('external.eta', { message: 'Logout com sucesso' }) as string,
   }
@@ -85,6 +89,7 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
   }
 }
 
+
 const handler: Handler = async (event, context) => {
   try {
     return await main(event, context)
@@ -96,5 +101,6 @@ const handler: Handler = async (event, context) => {
     }
   }
 }
+
 
 export { handler }
