@@ -3,6 +3,9 @@ command = "npm run build:css"
 functions = "server"
 publish = "public"
 
+[functions]
+included_files = ["views/**"]
+
 [dev]
 command = "npm run dev:css"
 port = 3000
