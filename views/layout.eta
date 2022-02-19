@@ -1,0 +1,13 @@
+<% layout('template') %>
+
+  <div class="absolute inset-0">
+    <nav class="bg-primary flex justify-end p-4">
+      <form action="/logout" method="post">
+        <button type="submit"
+          class="btn bg-light text-cinza2 font-medium shadow-cinza2/80 before:content-[url('/assets/icons/logout.svg')]">Sair</button>
+      </form>
+    </nav>
+    <main class="grow">
+      <%~ it.body %>
+    </main>
+  </div>

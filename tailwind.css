@@ -48,4 +48,7 @@ body {
 }
 
 @layer components {
+  .btn {
+    @apply flex py-2 px-3 text-sm rounded-md shadow-md active:opacity-90 before:h-5 before:w-5 before:mr-1.5
+  }
 }

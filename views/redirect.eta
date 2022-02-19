@@ -13,10 +13,11 @@
   <link rel="icon" href="favicon-96x96.png" type="image/png" sizes="96x96">
   <link rel="icon" href="favicon-32x32.png" type="image/png" sizes="32x32">
   <link rel="icon" href="favicon-16x16.png" type="image/png" sizes="16x16">
+
+  <meta http-equiv="refresh" content="0;url=<%= it.redirect %>">
 </head>
 
 <body class="bg-light">
-  <%~ it.body %>
 </body>
 
 </html>

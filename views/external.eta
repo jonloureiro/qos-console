@@ -1,0 +1,11 @@
+<% layout('template') %>
+
+  <main class="absolute inset-0 bg-primary flex flex-col justify-center items-center pb-24">
+    <h1 class="text-4xl font-bold text-light w-60 text-center mb-4">
+      <%= it.message %>
+    </h1>
+    <a href="/"
+      class="btn bg-light text-cinza2 font-medium shadow-cinza2/80 before:content-[url('/assets/icons/home.svg')]">
+      Início
+    </a>
+  </main>
