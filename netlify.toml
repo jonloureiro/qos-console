@@ -4,7 +4,7 @@ functions = "server"
 publish = "public"
 
 [functions]
-included_files = ["views/**/*.eta"]
+included_files = ["views/*.eta", "data/*.json"]
 
 [dev]
 command = "npm run dev:css"
