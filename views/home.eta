@@ -1,0 +1,5 @@
+<% layout('template') %>
+
+<div id="content">
+  <p><%= it.message %></p>
+</div>

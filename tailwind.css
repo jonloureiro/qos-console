@@ -48,15 +48,4 @@ body {
 }
 
 @layer components {
-  button {
-    @apply transition-opacity active:opacity-75
-  }
-
-  .btn {
-    @apply normal-case rounded-md no-animation min-h-0 h-10 font-medium;
-  }
-
-  .label {
-    @apply px-0
-  }
 }

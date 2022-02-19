@@ -1,0 +1,10 @@
+<% layout('template') %>
+
+  <div class="">
+    <h1>
+      <%= it.code %>
+    </h1>
+    <p>
+      <%= it.message %>
+    </p>
+  </div>
