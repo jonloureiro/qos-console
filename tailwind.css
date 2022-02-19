@@ -49,6 +49,18 @@ body {
 
 @layer components {
   .btn {
-    @apply flex py-2 px-3 text-sm rounded-md shadow-md active:opacity-90 before:h-5 before:w-5 before:mr-1.5
+    @apply normal-case rounded-sm font-medium no-animation min-h-0 h-10 transition-opacity active:opacity-75 shadow-lg before:h-5 before:w-5 before:mr-1.5
+  }
+
+  .btn-primary {
+    @apply shadow-primary/20
+  }
+
+  .input {
+    @apply rounded-sm border-0 h-10 font-medium text-cinza2 transition-all shadow-sm shadow-primary/20
+  }
+
+  input::placeholder {
+    @apply text-cinza1/80
   }
 }

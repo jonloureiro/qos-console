@@ -1,4 +1,4 @@
-<% layout('layout') %>
+<% layout('_layout') %>
 
   <div id="content">
     <p>

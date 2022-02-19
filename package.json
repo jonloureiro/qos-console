@@ -9,6 +9,7 @@
     "@aws-sdk/client-dynamodb": "^3.52.0",
     "@netlify/functions": "^1.0.0",
     "cookie": "^0.4.2",
+    "daisyui": "^1.25.4",
     "eta": "^1.12.3"
   },
   "devDependencies": {

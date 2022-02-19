@@ -1,0 +1,27 @@
+<% layout('_template') %>
+
+  <div class="absolute inset-0 bg-light flex flex-col justify-center items-center pb-24">
+    <main class="w-full max-w-xs p-4 rounded-sm flex flex-col">
+
+      <h1 class="text-3xl font-bold text-primary mb-4">Login</h1>
+
+      <form action="/login" method="post" class="w-full">
+
+        <label class="flex flex-col mb-4">
+          <span class="ml-1 mb-1 text-sm text-cinza2 font-medium">Email</span>
+          <input class="input input-primary" type="email" name="name" placeholder="Digite seu email" required autofocus>
+        </label>
+
+        <label class="flex flex-col mb-4">
+          <span class="ml-1 mb-1 text-sm text-cinza2 font-medium">Senha</span>
+          <input class="input input-primary" type="password" name="password" placeholder="Digite sua senha" required>
+        </label>
+
+        <div class="flex justify-end">
+          <button type="submit"
+            class="mt-1 btn btn-primary btn-block font-normal before:content-[url('/assets/icons/login.svg')]">Entrar</button>
+        </div>
+      </form>
+
+    </main>
+  </div>

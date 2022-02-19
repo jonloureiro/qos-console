@@ -20,5 +20,36 @@ module.exports = {
       }
     },
   },
-  plugins: [],
+  plugins: [
+    require('daisyui'),
+  ],
+  daisyui: {
+    logs: false,
+    themes: [
+      {
+        light: {
+          'primary': '#96323a',
+          'primary-focus': '#96323a',
+          'primary-content': '#FAF5F5',
+          'secondary': '#54595f',
+          'secondary-focus': '#54595f',
+          'secondary-content': '#FAF5F5',
+          'accent': '#61ce70',
+          'accent-focus': '#61ce70',
+          'accent-content': '#FAF5F5',
+          'neutral': '#7a7a7a',
+          'neutral-focus': '#7a7a7a',
+          'neutral-content': '#FAF5F5',
+          'base-100': '#ffffff',
+          'base-200': '#FAF5F5',
+          'base-300': '#d1d5db',
+          'base-content': '#1f2937',
+          'info': '#4054b2',
+          'success': '#23a455',
+          'warning': '#f4a261',
+          'error': '#ee1c25',
+        },
+      },
+    ],
+  },
 }
