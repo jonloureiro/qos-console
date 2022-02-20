@@ -1,11 +1,13 @@
 <% layout('_template') %>
 
-  <main class="absolute inset-0 bg-cinza2 flex flex-col justify-center items-center pb-24">
-    <h1 class="text-4xl font-bold text-light/90 w-60 text-center mb-4">
-      <%= it.message %>
-    </h1>
-    <a href="/"
-      class="btn bg-light text-primary font-medium shadow-cinza2/80 before:content-[url('/assets/icons/home.svg')]">
+  <main class="absolute inset-0 bg-primary flex flex-col justify-center items-center pb-24">
+    <div
+      class="flex justify-center relative before:absolute before:-top-28 before:bg-contain before:bg-no-repeat before:bg-[url('/assets/images/logo-light-192x192.png')] before:w-24 before:h-24">
+      <h1 class="text-3xl font-bold text-light/90 w-60 text-center mb-4">
+        <%= it.message %>
+      </h1>
+    </div>
+    <a href="/" class="btn btn-light before:content-[url('/assets/icons/home.svg')]">
       Início
     </a>
   </main>

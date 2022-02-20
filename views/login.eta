@@ -1,9 +1,14 @@
 <% layout('_template') %>
 
   <div class="absolute inset-0 bg-light flex flex-col justify-center items-center pb-24">
-    <main class="w-full max-w-xs p-4 rounded-sm flex flex-col">
+    <main class="w-full sm:max-w-xs p-4 rounded-sm flex flex-col">
 
-      <h1 class="text-3xl font-bold text-primary mb-4">Login</h1>
+      <div
+        class="flex justify-center relative before:absolute before:-top-28 before:bg-contain before:bg-no-repeat before:bg-[url('/assets/images/logo-dark-192x192.png')] before:w-24 before:h-24">
+        <h1 class="w-full text-left text-3xl font-bold text-primary mb-4">
+          Entrar
+        </h1>
+      </div>
 
       <form action="/login" method="post" class="w-full">
 

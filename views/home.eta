@@ -1,7 +1,16 @@
-<% layout('_layout') %>
+<% layout('_template') %>
 
-  <div id="content">
-    <p>
-      <%= it.message %>
-    </p>
+  <div class="absolute inset-0">
+    <nav class="bg-primary flex justify-end items-center py-3 px-4 relative shadow-lg shadow-primary/20">
+      <img src="/assets/images/logo-light-80x80.png" alt="" height="40" width="40" class="absolute left-4">
+      <span class="text-light mr-4 font-medium text-sm">
+        <%~ it.email %>
+      </span>
+      <form action="/logout" method="post">
+        <button type="submit" class="btn btn-light before:content-[url('/assets/icons/logout.svg')]">Sair</button>
+      </form>
+    </nav>
+    <main class="h-full bg-light p-4">
+      <%~ it.message %>
+    </main>
   </div>

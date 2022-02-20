@@ -66,7 +66,7 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
     const [, email] = emailstring.split('=')
     const [, password] = passwordstring.split('=')
 
-    const user = users.find(user => user.email === email)
+    const user = users.find(user => (user && user.email && user.email === email))
 
     if (user && user.password === password) {
       const signer = createSign('rsa-sha256')
@@ -79,7 +79,7 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
         headers: {
           'Set-Cookie': `__session=${email + '&' + token}; Max-Age=3600; ${process.env.NODE_ENV !== 'development' ? 'Secure;' : ''} HttpOnly; SameSite=Lax;`
         },
-        body: await Eta.renderFile('redirect.eta', { redirect: '/' }) as string,
+        body: await Eta.renderFile('_redirect.eta', { redirect: '/', message: 'Login com sucesso' }) as string,
       }
     }
 
@@ -94,7 +94,7 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
     headers: {
       'Set-Cookie': `__session=; Max-Age=0; ${process.env.NODE_ENV !== 'development' ? 'Secure;' : ''} HttpOnly; SameSite=Lax;`
     },
-    body: await Eta.renderFile('external.eta', { message: 'Logout com sucesso' }) as string,
+    body: await Eta.renderFile('_redirect.eta', { redirect: '/login', message: 'Logout com sucesso' }) as string,
   }
 
   if (event.path !== '/' && event.httpMethod === 'GET') throw {
@@ -111,7 +111,7 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
     //TODO: Buscar os dados
     return {
       statusCode: 200,
-      body: await Eta.renderFile('home.eta', { message: 'Hello World' }) as string,
+      body: await Eta.renderFile('home.eta', { email: userEmail, message: 'Hello World' }) as string,
     }
   }
 
