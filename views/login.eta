@@ -1,6 +1,6 @@
 <% layout('_template') %>
 
-  <div class="absolute inset-0 bg-light flex flex-col justify-center items-center pb-24">
+  <div class="absolute inset-0 bg-light flex flex-col justify-center items-center pb-4">
     <main class="w-full sm:max-w-xs p-4 rounded-sm flex flex-col">
 
       <div

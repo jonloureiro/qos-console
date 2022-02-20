@@ -1,6 +1,6 @@
 <% layout('_template') %>
 
-  <main class="absolute inset-0 bg-primary flex flex-col justify-center items-center pb-24">
+  <main class="absolute inset-0 bg-primary flex flex-col justify-center items-center pb-4">
     <div
       class="flex justify-center relative before:absolute before:-top-28 before:bg-contain before:bg-no-repeat before:bg-[url('/assets/images/logo-light-192x192.png')] before:w-24 before:h-24">
       <h1 class="text-3xl font-bold text-light/90 w-60 text-center mb-4">
