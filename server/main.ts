@@ -2,13 +2,45 @@ import { resolve } from 'path'
 import { createSign, createVerify } from 'crypto'
 
 import { Handler, HandlerEvent, HandlerContext } from '@netlify/functions'
+import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb'
 import * as Eta from 'eta'
 
 import users from '../data/users'
 
 
+type Item = {
+  hora: {
+    S: string
+  },
+  device_id: {
+    S: string
+  },
+  registry: {
+    N: string
+  },
+  qos: {
+    S: string
+  },
+  data: {
+    S: string
+  }
+}
+
+
+type Result = [number, number, number]
+
+
 Eta.configure({
   views: resolve('views')
+})
+
+
+const client = new DynamoDBClient({
+  region: process.env.DYNAMODB_REGION!,
+  credentials: {
+    accessKeyId: process.env.DYNAMODB_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.DYNAMODB_SECRET_ACCESS_KEY!
+  }
 })
 
 
@@ -108,10 +140,38 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
   }
 
   if (userEmail) {
+    const command = new QueryCommand({
+      TableName: "totem_qos_table",
+      IndexName: "mes_ano-index",
+      KeyConditionExpression: "mes_ano = :month_year",
+      ExpressionAttributeValues: {
+        ":month_year": { S: "01-2022" } //TODO: existe itens com 02-2022 e 2-2022
+      },
+    })
+
+    const results = await client.send(command);
+    const items = (results.Items as Item[]) ?? []
+
+    const qos = items.reduce((previousValue, currentValue) => {
+      switch (currentValue.qos.S) {
+        case "RUIM":
+          previousValue[0]++
+          return previousValue
+        case "REGULAR":
+          previousValue[1]++
+          return previousValue
+        case "EXCELENTE":
+          previousValue[2]++
+          return previousValue
+        default:
+          return previousValue
+      }
+    }, [0, 0, 0])
+
     //TODO: Buscar os dados
     return {
       statusCode: 200,
-      body: await Eta.renderFile('home.eta', { email: userEmail, message: 'Hello World' }) as string,
+      body: await Eta.renderFile('home.eta', { email: userEmail, message: qos }) as string,
     }
   }
 
