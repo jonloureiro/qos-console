@@ -1,6 +1,9 @@
+import { resolve } from 'path'
+import { createSign, createVerify } from 'crypto'
+
 import { Handler, HandlerEvent, HandlerContext } from '@netlify/functions'
 import * as Eta from 'eta'
-import { resolve } from 'path'
+
 import users from '../data/users'
 
 
@@ -9,9 +12,44 @@ Eta.configure({
 })
 
 
+const privateKey = Buffer.from(process.env.PRIVATE_KEY, 'base64').toString()
+const publicKey = Buffer.from(process.env.PUBLIC_KEY, 'base64').toString()
+
+
 const main = async (event: HandlerEvent, context: HandlerContext) => {
+  let userEmail: string | undefined = undefined
+  if (event.headers.cookie) {
+    const [, cookieValue] = event.headers.cookie.split('=')
+
+    if (!cookieValue) throw {
+      statusCode: 400,
+      errorMessage: 'Cookie inválido'
+    }
+
+    const [emailHex, token] = cookieValue.split('&')
+
+    if (!emailHex || !token) throw {
+      statusCode: 400,
+      errorMessage: 'Cookie inválido'
+    }
+
+    const email = Buffer.from(emailHex, 'hex').toString()
+
+    const verifier = createVerify('rsa-sha256');
+    verifier.update(email);
+    const hasUser = verifier.verify(publicKey, token, 'hex')
+    if (hasUser) {
+      userEmail = email
+    }
+  }
+
   if (event.path === '/login' && event.httpMethod === 'GET') {
-    // TODO: checar se tem token válida
+    if (userEmail) return {
+      statusCode: 302,
+      headers: {
+        'Location': '/'
+      }
+    }
     return {
       statusCode: 200,
       body: await Eta.renderFile('login.eta', {}) as string,
@@ -19,7 +57,6 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
   }
 
   if (event.path === '/login' && event.httpMethod === 'POST') {
-    // TODO: checar se tem token válida
     if (!event.body) throw {
       statusCode: 400,
       errorMessage: 'Tente novamente'
@@ -31,17 +68,19 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
 
     const user = users.find(user => user.email === email)
 
-    if (user && user.password === password) return {
-      // TODO: criar cookie
-      statusCode: 200,
-      headers: {
-        // 'Set-Cookie': cookie.serialize('__session', 'user', {
-        //   secure: process.env.NODE_ENV !== 'development',
-        //   httpOnly: true,
-        //   maxAge: 3600,
-        // }),
-      },
-      body: await Eta.renderFile('redirect.eta', { redirect: '/' }) as string,
+    if (user && user.password === password) {
+      const signer = createSign('rsa-sha256')
+      signer.update(user.email)
+      const token = signer.sign(privateKey, 'hex')
+      const email = Buffer.from(user.email).toString('hex')
+
+      return {
+        statusCode: 200,
+        headers: {
+          'Set-Cookie': `__session=${email + '&' + token}; Max-Age=3600; ${process.env.NODE_ENV !== 'development' ? 'Secure;' : ''} HttpOnly; SameSite=Lax;`
+        },
+        body: await Eta.renderFile('redirect.eta', { redirect: '/' }) as string,
+      }
     }
 
     return {
@@ -51,14 +90,9 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
   }
 
   if (event.path === '/logout' && event.httpMethod === 'POST') return {
-    // TODO: deletar cookie
     statusCode: 200,
     headers: {
-      // 'Set-Cookie': cookie.serialize('__session', '', {
-      //   secure: process.env.NODE_ENV !== 'development',
-      //   httpOnly: true,
-      //   maxAge: 0,
-      // }),
+      'Set-Cookie': `__session=; Max-Age=0; ${process.env.NODE_ENV !== 'development' ? 'Secure;' : ''} HttpOnly; SameSite=Lax;`
     },
     body: await Eta.renderFile('external.eta', { message: 'Logout com sucesso' }) as string,
   }
@@ -73,8 +107,8 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
     errorMessage: 'Método não implementado'
   }
 
-  if (event.headers.cookie) {
-    //TODO: checar se o cookie é válido
+  if (userEmail) {
+    //TODO: Buscar os dados
     return {
       statusCode: 200,
       body: await Eta.renderFile('home.eta', { message: 'Hello World' }) as string,
@@ -91,6 +125,8 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
 
 
 const handler: Handler = async (event, context) => {
+  if (context) context.callbackWaitsForEmptyEventLoop = false
+
   try {
     return await main(event, context)
   } catch (error) {
