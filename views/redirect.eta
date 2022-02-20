@@ -18,6 +18,9 @@
 </head>
 
 <body class="bg-light">
+  <script>
+    setTimeout(() => window.location = <%= it.redirect %>, 1000)
+  </script>
 </body>
 
 </html>
