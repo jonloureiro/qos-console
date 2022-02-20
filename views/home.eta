@@ -1,6 +1,6 @@
 <% layout('_template') %>
 
-  <div class="absolute inset-0">
+  <div class="absolute inset-0 flex flex-col">
     <nav class="bg-primary flex justify-end items-center py-3 px-4 relative shadow-lg shadow-primary/20">
       <img src="/assets/images/logo-light-80x80.png" alt="" height="40" width="40" class="absolute left-4">
       <span class="text-light mr-4 font-medium text-xs sm:text-sm underline underline-offset-4">
@@ -11,7 +11,7 @@
           class="btn btn-light shadow-none before:content-[url('/assets/icons/logout.svg')]">Sair</button>
       </form>
     </nav>
-    <main class="h-full bg-light p-4">
+    <main class="bg-light p-4 grow">
       <%~ it.message %>
     </main>
   </div>
