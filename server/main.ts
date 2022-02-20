@@ -51,27 +51,36 @@ const publicKey = Buffer.from(process.env.PUBLIC_KEY, 'base64').toString()
 const main = async (event: HandlerEvent, context: HandlerContext) => {
   let userEmail: string | undefined = undefined
   if (event.headers.cookie) {
-    const [, cookieValue] = event.headers.cookie.split('=')
+    const cookies = event.headers.cookie.split(';')
 
-    if (!cookieValue) throw {
-      statusCode: 400,
-      errorMessage: 'Cookie inválido'
-    }
+    const sessionCookie = cookies.find(value => {
+      const [cookieKey,] = value.trim().split('=')
+      return cookieKey === '__session'
+    })
 
-    const [emailHex, token] = cookieValue.split('&')
+    if (sessionCookie) {
+      const [, cookieValue] = sessionCookie.split('=')
 
-    if (!emailHex || !token) throw {
-      statusCode: 400,
-      errorMessage: 'Cookie inválido'
-    }
+      if (!cookieValue) throw {
+        statusCode: 400,
+        errorMessage: 'Cookie inválido'
+      }
 
-    const email = Buffer.from(emailHex, 'hex').toString()
+      const [emailHex, token] = cookieValue.split('&')
 
-    const verifier = createVerify('rsa-sha256');
-    verifier.update(email);
-    const hasUser = verifier.verify(publicKey, token, 'hex')
-    if (hasUser) {
-      userEmail = email
+      if (!emailHex || !token) throw {
+        statusCode: 400,
+        errorMessage: 'Cookie inválido'
+      }
+
+      const email = Buffer.from(emailHex, 'hex').toString()
+
+      const verifier = createVerify('rsa-sha256');
+      verifier.update(email);
+      const hasUser = verifier.verify(publicKey, token, 'hex')
+      if (hasUser) {
+        userEmail = email
+      }
     }
   }
 
