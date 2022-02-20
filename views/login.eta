@@ -31,9 +31,10 @@
 
     </main>
     <% if (it.errorMessage) { %>
-      <p
-        class="w-full max-w-[288px] absolute top-0 text-sm font-medium text-center text-cinza2 bg-error/5 p-4 m-4 rounded-sm ring ring-error">
-        <%= it.errorMessage %>
-      </p>
+      <div class="w-full sm:max-w-xs absolute top-4 px-4">
+        <p class=" text-sm font-medium text-center text-cinza2 bg-vermelho-claro p-2 rounded-sm ring ring-primary">
+          <%= it.errorMessage %>
+        </p>
+      </div>
       <% } %>
   </div>

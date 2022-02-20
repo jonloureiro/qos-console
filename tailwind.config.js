@@ -16,6 +16,7 @@ module.exports = {
         'verde2': '#23A455',
         'azul': '#4054b2',
         'vermelho': '#EE1C25',
+        'vermelho-claro': '#F9EAEB',
         'laranja': '#F4A261'
       }
     },
