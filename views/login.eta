@@ -25,7 +25,7 @@
 
         <div class="flex justify-end">
           <button type="submit"
-            class="mt-1 btn btn-primary btn-block font-normal before:content-[url('/assets/icons/login.svg')]">Entrar</button>
+            class="mt-1 px-6 btn btn-primary font-normal before:content-[url('/assets/icons/login.svg')]">Entrar</button>
         </div>
       </form>
 

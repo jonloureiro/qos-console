@@ -3,11 +3,12 @@
   <div class="absolute inset-0">
     <nav class="bg-primary flex justify-end items-center py-3 px-4 relative shadow-lg shadow-primary/20">
       <img src="/assets/images/logo-light-80x80.png" alt="" height="40" width="40" class="absolute left-4">
-      <span class="text-light mr-4 font-medium text-sm">
+      <span class="text-light mr-4 font-medium text-sm underline underline-offset-4">
         <%~ it.email %>
       </span>
       <form action="/logout" method="post">
-        <button type="submit" class="btn btn-light before:content-[url('/assets/icons/logout.svg')]">Sair</button>
+        <button type="submit"
+          class="btn btn-light shadow-none before:content-[url('/assets/icons/logout.svg')]">Sair</button>
       </form>
     </nav>
     <main class="h-full bg-light p-4">
