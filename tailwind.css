@@ -49,11 +49,15 @@ body {
 
 @layer components {
   .btn {
-    @apply normal-case rounded-sm font-medium no-animation min-h-0 h-10 transition-opacity active:opacity-75 shadow-lg before:h-5 before:w-5 before:mr-1.5
+    @apply border-0 normal-case rounded-sm font-medium no-animation min-h-0 h-10 transition-opacity active:opacity-75 shadow-lg before:h-5 before:w-5 before:mr-1.5
   }
 
   .btn-primary {
     @apply shadow-primary/20
+  }
+
+  .btn-light {
+    @apply bg-light hover:bg-light text-primary font-medium shadow-cinza2/80
   }
 
   .input {
