@@ -54,7 +54,8 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
       if (!cookieValue) {
         throw {
           statusCode: 400,
-          errorMessage: 'Cookie inválido'
+          errorMessage: 'Cookie inválido',
+          message: `cookieValue ${cookieValue}`
         }
       }
 
@@ -63,7 +64,8 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
       if (!emailBase64 || !signature) {
         throw {
           statusCode: 400,
-          errorMessage: 'Cookie inválido'
+          errorMessage: 'Cookie inválido',
+          message: `emailBase64 ${emailBase64}; signature ${signature}`
         }
       }
 
