@@ -38,7 +38,7 @@
             <option value="2022" <%~ it.year==='2022' ? 'selected' : '' %>>2022</option>
           </select>
           <button type="submit my-1 mr-2"
-            class="btn btn-primary my-1 mr-2 before:content-[url('/assets/icons/search.svg')]">Consultar</button>
+            class="btn btn-info my-1 mr-2 before:content-[url('/assets/icons/search.svg')]">Consultar</button>
           <% if (it.month && it.year) {%>
             <a href="/" class="btn btn-warning my-1 mr-2 before:content-[url('/assets/icons/trash.svg')]">Limpar</a>
             <% }%>

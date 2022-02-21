@@ -56,6 +56,14 @@ body {
     @apply shadow-primary/20
   }
 
+  .btn-info {
+    @apply shadow-info/20
+  }
+
+  .btn-success {
+    @apply shadow-success/20
+  }
+
   .btn-warning {
     @apply shadow-warning/20
   }
