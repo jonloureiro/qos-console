@@ -15,7 +15,42 @@
     </div>
     <main class="bg-light p-4 grow flex justify-center">
       <div class="w-full max-w-5xl">
-        <%~ it.message %>
+
+        <form method="get" class="my-3 w-full flex flex-wrap">
+          <select class="select select-primary my-1 mr-2" name="month">
+            <option disabled hidden <%~ it.month ? '' : 'selected' %>>Mês</option>
+            <option value="01" <%~ it.month==='01' ? 'selected' : '' %>>jan</option>
+            <option value="02" <%~ it.month==='02' ? 'selected' : '' %>>fev</option>
+            <option value="03" <%~ it.month==='03' ? 'selected' : '' %>>mar</option>
+            <option value="04" <%~ it.month==='04' ? 'selected' : '' %>>abr</option>
+            <option value="05" <%~ it.month==='05' ? 'selected' : '' %>>mai</option>
+            <option value="06" <%~ it.month==='06' ? 'selected' : '' %>>jun</option>
+            <option value="07" <%~ it.month==='07' ? 'selected' : '' %>>jul</option>
+            <option value="08" <%~ it.month==='08' ? 'selected' : '' %>>ago</option>
+            <option value="09" <%~ it.month==='09' ? 'selected' : '' %>>set</option>
+            <option value="10" <%~ it.month==='10' ? 'selected' : '' %>>out</option>
+            <option value="11" <%~ it.month==='11' ? 'selected' : '' %>>nov</option>
+            <option value="12" <%~ it.month==='12' ? 'selected' : '' %>>dez</option>
+          </select>
+          <select class="select select-primary my-1 mr-2" name="year">
+            <option disabled hidden <%~ it.year ? '' : 'selected' %>>Ano</option>
+            <option value="2021" <%~ it.year==='2021' ? 'selected' : '' %>>2021</option>
+            <option value="2022" <%~ it.year==='2022' ? 'selected' : '' %>>2022</option>
+          </select>
+          <button type="submit my-1 mr-2"
+            class="btn btn-primary my-1 mr-2 before:content-[url('/assets/icons/search.svg')]">Consultar</button>
+          <% if (it.month && it.year) {%>
+            <a href="/" class="btn btn-warning my-1 mr-2 before:content-[url('/assets/icons/trash.svg')]">Limpar</a>
+            <% }%>
+        </form>
+        <% if (it.errorMessage) { %>
+          <p class="text-sm font-bold text-error mb-4">
+            <%~ it.errorMessage %>
+          </p>
+          <% } %>
+            <br>
+
+            <%~ it.message ?? '' %>
       </div>
     </main>
   </div>

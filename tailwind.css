@@ -56,15 +56,23 @@ body {
     @apply shadow-primary/20
   }
 
+  .btn-warning {
+    @apply shadow-warning/20
+  }
+
   .btn-light {
     @apply bg-light hover:bg-light text-primary font-medium shadow-cinza2/80
   }
 
   .input {
-    @apply rounded-sm border-0 h-10 font-medium text-cinza2 transition-all shadow-sm shadow-primary/20
+    @apply rounded-sm border-0 h-10 font-medium text-cinza2 shadow-sm shadow-primary/20
   }
 
   input::placeholder {
     @apply text-cinza1/80
+  }
+
+  .select {
+    @apply rounded-sm border-0 min-h-0 h-10 font-medium text-cinza2 shadow-sm shadow-primary/20
   }
 }

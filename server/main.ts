@@ -94,12 +94,11 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
   }
 
   if (event.path === '/login' && event.httpMethod === 'POST') {
-    if (!event.body) {
-      throw {
-        statusCode: 400,
-        errorMessage: 'Tente novamente'
-      }
+    if (!event.body) throw {
+      statusCode: 400,
+      errorMessage: 'Tente novamente'
     }
+
 
     const [emailKeyValue, passwordKeyValue] = decodeURIComponent(event.body).split('&')
     const [, emailValue] = emailKeyValue.split('=')
@@ -153,12 +152,41 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
   }
 
   if (userEmail) {
+
+    if (!event.queryStringParameters) throw Error('queryStringParameters === null')
+
+    const { month, year } = event.queryStringParameters
+
+    if (!month && !year) return {
+      statusCode: 200,
+      body: await Eta.renderFile('home.eta', { email: userEmail }) as string
+    }
+
+    if (!month && year) return {
+      statusCode: 200,
+      body: await Eta.renderFile('home.eta', { email: userEmail, errorMessage: 'Selecione o mês', year }) as string
+    }
+
+    if (month && !year) return {
+      statusCode: 200,
+      body: await Eta.renderFile('home.eta', { email: userEmail, errorMessage: 'Selecione o ano', month }) as string
+    }
+
+    if (
+      !['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].includes(month!)
+      ||
+      !['2021', '2022'].includes(year!)
+    ) throw {
+      statusCode: 400,
+      errorMessage: 'Tente novamente'
+    }
+
     const command = new QueryCommand({
       TableName: 'totem_qos_table',
       IndexName: 'mes_ano-index',
       KeyConditionExpression: 'mes_ano = :month_year',
       ExpressionAttributeValues: {
-        ':month_year': { S: '01-2022' }
+        ':month_year': { S: `${month}-${year}` }
       }
     })
 
@@ -183,7 +211,12 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
 
     return {
       statusCode: 200,
-      body: await Eta.renderFile('home.eta', { email: userEmail, message: qos }) as string
+      body: await Eta.renderFile('home.eta', {
+        email: userEmail,
+        message: qos,
+        year,
+        month
+      }) as string
     }
   }
 
