@@ -43,13 +43,13 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
   if (event.headers.cookie) {
     const cookies = event.headers.cookie.split(';')
 
-    const sessionCookie = cookies.find(value => {
+    const sessionKeyValue = cookies.find(value => {
       const [cookieKey] = value.trim().split('=')
       return cookieKey === '__session'
     })
 
-    if (sessionCookie) {
-      const [, cookieValue] = sessionCookie.split('=')
+    if (sessionKeyValue) {
+      const [, cookieValue] = sessionKeyValue.split('=')
 
       if (!cookieValue) {
         throw {
@@ -58,20 +58,20 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
         }
       }
 
-      const [emailHex, token] = cookieValue.split('&')
+      const [emailBase64, signature] = cookieValue.split('.')
 
-      if (!emailHex || !token) {
+      if (!emailBase64 || !signature) {
         throw {
           statusCode: 400,
           errorMessage: 'Cookie inválido'
         }
       }
 
-      const email = Buffer.from(emailHex, 'hex').toString()
+      const email = Buffer.from(emailBase64, 'base64').toString()
 
       const verifier = createVerify('rsa-sha256')
       verifier.update(email)
-      const hasUser = verifier.verify(publicKey, token, 'hex')
+      const hasUser = verifier.verify(publicKey, signature, 'base64')
       if (hasUser) {
         userEmail = email
       }
@@ -101,22 +101,22 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
       }
     }
 
-    const [emailstring, passwordstring] = decodeURIComponent(event.body).split('&')
-    const [, email] = emailstring.split('=')
-    const [, password] = passwordstring.split('=')
+    const [emailKeyValue, passwordKeyValue] = decodeURIComponent(event.body).split('&')
+    const [, emailValue] = emailKeyValue.split('=')
+    const [, passwordValue] = passwordKeyValue.split('=')
 
-    const user = users.find(user => (user && user.email && user.email === email))
+    const user = users.find(user => (user && user.email === emailValue))
 
-    if ((user != null) && user.password === password) {
+    if (user && user.password === passwordValue) {
       const signer = createSign('rsa-sha256')
       signer.update(user.email)
-      const token = signer.sign(privateKey, 'hex')
-      const emailHex = Buffer.from(user.email).toString('hex')
+      const signature = signer.sign(privateKey, 'base64')
+      const emailBase64 = Buffer.from(user.email).toString('base64')
 
       return {
         statusCode: 200,
         headers: {
-          'Set-Cookie': `__session=${emailHex + '&' + token}; Max-Age=3600; ${process.env.NODE_ENV !== 'development' ? 'Secure; ' : ''}HttpOnly; SameSite=Lax;`
+          'Set-Cookie': `__session=${emailBase64 + '.' + signature}; Max-Age=3600; ${process.env.NODE_ENV !== 'development' ? 'Secure; ' : ''}HttpOnly; SameSite=Lax;`
         },
         body: await Eta.renderFile('_redirect.eta', { redirect: '/', message: 'Login com sucesso' }) as string
       }
