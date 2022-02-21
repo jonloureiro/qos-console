@@ -1,17 +1,21 @@
 <% layout('_template') %>
 
   <div class="absolute inset-0 flex flex-col">
-    <nav class="bg-primary flex justify-end items-center py-3 px-4 relative shadow-lg shadow-primary/20">
-      <img src="/assets/images/logo-light-80x80.png" alt="" height="40" width="40" class="absolute left-4">
-      <span class="text-light mr-4 font-medium text-xs sm:text-sm underline underline-offset-4">
-        <%~ it.email %>
-      </span>
-      <form action="/logout" method="post">
-        <button type="submit"
-          class="btn btn-light shadow-none before:content-[url('/assets/icons/logout.svg')]">Sair</button>
-      </form>
-    </nav>
-    <main class="bg-light p-4 grow">
-      <%~ it.message %>
+    <div class="bg-primary shadow-lg shadow-primary/20 px-4 flex justify-center">
+      <nav class="w-full max-w-5xl flex justify-end items-center py-3 relative">
+        <img src="/assets/images/logo-light-80x80.png" alt="" height="40" width="40" class="absolute left-0">
+        <span class="text-light/90 mr-4 font-medium text-xs sm:text-sm underline underline-offset-4">
+          <%~ it.email %>
+        </span>
+        <form action="/logout" method="post">
+          <button type="submit"
+            class="btn btn-light shadow-none before:content-[url('/assets/icons/logout.svg')]">Sair</button>
+        </form>
+      </nav>
+    </div>
+    <main class="bg-light p-4 grow flex justify-center">
+      <div class="w-full max-w-5xl">
+        <%~ it.message %>
+      </div>
     </main>
   </div>

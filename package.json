@@ -3,7 +3,8 @@
   "scripts": {
     "build:css": "tailwindcss -i ./tailwind.css -o ./public/style.css --minify",
     "dev": "cross-env NODE_ENV=development netlify dev",
-    "dev:css": "tailwindcss -i ./tailwind.css -o ./public/style.css --watch"
+    "dev:css": "tailwindcss -i ./tailwind.css -o ./public/style.css --watch",
+    "lint": "ts-standard --fix"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.52.0",
@@ -12,10 +13,15 @@
     "eta": "^1.12.3"
   },
   "devDependencies": {
-    "@types/cookie": "^0.4.1",
     "@types/node": "^17.0.18",
     "cross-env": "^7.0.3",
     "tailwindcss": "^3.0.23",
+    "ts-standard": "^11.0.0",
     "typescript": "^4.5.5"
+  },
+  "ts-standard": {
+    "rules": {
+      "@typescript-eslint/no-throw-literal": "off"
+    }
   }
 }
