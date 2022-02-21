@@ -59,21 +59,21 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
         }
       }
 
-      const [emailBase64, signature] = cookieValue.split('.')
+      const [emailHex, signature] = cookieValue.split('.')
 
-      if (!emailBase64 || !signature) {
+      if (!emailHex || !signature) {
         throw {
           statusCode: 400,
           errorMessage: 'Cookie inválido',
-          message: `emailBase64 ${emailBase64}; signature ${signature}`
+          message: `emailBase64 ${emailHex}; signature ${signature}`
         }
       }
 
-      const email = Buffer.from(emailBase64, 'base64').toString()
+      const email = Buffer.from(emailHex, 'hex').toString()
 
       const verifier = createVerify('rsa-sha256')
       verifier.update(email)
-      const hasUser = verifier.verify(publicKey, signature, 'base64')
+      const hasUser = verifier.verify(publicKey, signature, 'hex')
       if (hasUser) {
         userEmail = email
       }
@@ -111,13 +111,13 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
     if (user && user.password === passwordValue) {
       const signer = createSign('rsa-sha256')
       signer.update(user.email)
-      const signature = signer.sign(privateKey, 'base64')
-      const emailBase64 = Buffer.from(user.email).toString('base64')
+      const signature = signer.sign(privateKey, 'hex')
+      const emailHex = Buffer.from(user.email).toString('hex')
 
       return {
         statusCode: 200,
         headers: {
-          'Set-Cookie': `__session=${emailBase64 + '.' + signature}; Max-Age=3600; ${process.env.NODE_ENV !== 'development' ? 'Secure; ' : ''}HttpOnly; SameSite=Lax;`
+          'Set-Cookie': `__session=${emailHex + '.' + signature}; Max-Age=3600; ${process.env.NODE_ENV !== 'development' ? 'Secure; ' : ''}HttpOnly; SameSite=Lax;`
         },
         body: await Eta.renderFile('_redirect.eta', { redirect: '/', message: 'Login com sucesso' }) as string
       }
