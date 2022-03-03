@@ -13,6 +13,9 @@
   <link rel="icon" href="/favicon-96x96.png" type="image/png" sizes="96x96">
   <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32">
   <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16">
+
+  <link rel="prefetch" as="script" href="https://cdn.jsdelivr.net/npm/xlsx@0.18.2/dist/xlsx.core.min.js">
+  <link rel="prefetch" as="script" href="https://cdn.jsdelivr.net/npm/frappe-charts@1.2.4/dist/frappe-charts.min.iife.js">
 </head>
 
 <body class="bg-light">
