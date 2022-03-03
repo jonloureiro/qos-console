@@ -42,6 +42,20 @@
           <% if (it.month && it.year) {%>
             <a href="/" class="btn btn-warning my-1 mr-2 before:content-[url('/assets/icons/trash.svg')]">Limpar</a>
             <% }%>
+
+              <% if (it.sheet) { %>
+                <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.2/dist/xlsx.core.min.js"></script>
+                <script>
+                  console.log([["<% ~it.sheet %>"]])
+                  const workbook = XLSX.utils.book_new();
+                  const worksheet = XLSX.utils.aoa_to_sheet(
+                    [["<% ~it.sheet %>"]] //TODO: tratar esses dados corretamente
+                  )
+                  workbook.SheetNames.push("qos-console");
+                  workbook.Sheets["qos-console"] = worksheet
+                  //XLSX.writeFile(workbook, 'qos-console.xlsx')
+                </script>
+                <% }%>
         </form>
         <% if (it.errorMessage) { %>
           <p class="text-sm font-bold text-error mb-4">
@@ -50,7 +64,7 @@
           <% } %>
             <br>
 
-            <% if (it.message) { %>
+            <% if (it.values) { %>
               <div class="flex justify-center">
                 <div class="w-80 sm:w-96">
                   <div id="chart"></div>
@@ -62,7 +76,7 @@
                   labels: ["Ruim", "Regular", "Excelente"],
                   datasets: [
                     {
-                      values: [<% ~it.message %>]
+                      values: [<% ~it.values %>]
                     }
                   ]
                 }

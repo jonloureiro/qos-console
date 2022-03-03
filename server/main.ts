@@ -228,6 +228,12 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
       }
     }, [0, 0, 0])
 
+    const sheet = [
+      ["A1", "B1", "C1"],
+      ["A2", "B2", "C2"],
+      ["A3", "B3", "C3"]
+    ]
+
     return {
       statusCode: 200,
       headers: {
@@ -235,7 +241,8 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
       },
       body: await Eta.renderFile('home.eta', {
         email: userEmail,
-        message: qos,
+        values: qos,
+        sheet,
         year,
         month
       }) as string
