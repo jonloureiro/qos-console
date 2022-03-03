@@ -16,7 +16,7 @@
     <main class="bg-light p-4 grow flex justify-center">
       <div class="w-full max-w-5xl">
 
-        <form method="get" class="my-3 w-full flex flex-wrap">
+        <form method="get" class="my-3 flex flex-wrap">
           <select class="select select-primary my-1 mr-2" name="month">
             <option disabled hidden <%~ it.month ? '' : 'selected' %>>Mês</option>
             <option value="01" <%~ it.month==='01' ? 'selected' : '' %>>jan</option>
@@ -50,7 +50,31 @@
           <% } %>
             <br>
 
-            <%~ it.message ?? '' %>
+            <% if (it.message) { %>
+              <div class="flex justify-center">
+                <div class="w-80 sm:w-96">
+                  <div id="chart"></div>
+                </div>
+              </div>
+              <script src="https://cdn.jsdelivr.net/npm/frappe-charts@1.2.4/dist/frappe-charts.min.iife.js"></script>
+              <script>
+                const data = {
+                  labels: ["Ruim", "Regular", "Excelente"],
+                  datasets: [
+                    {
+                      values: [<% ~it.message %>]
+                    }
+                  ]
+                }
+
+                const chart = new frappe.Chart("#chart", {
+                  data: data,
+                  type: 'pie',
+                  height: 384,
+                  colors: ['#ED4C54', '#f4a261', '#61ce70']
+                })
+              </script>
+              <% } %>
       </div>
     </main>
   </div>
