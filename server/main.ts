@@ -91,6 +91,9 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
     }
     return {
       statusCode: 200,
+      headers: {
+        'Content-Type': 'text/html; charset=UTF-8'
+      },
       body: await Eta.renderFile('login.eta', {}) as string
     }
   }
@@ -117,6 +120,7 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
       return {
         statusCode: 200,
         headers: {
+          'Content-Type': 'text/html; charset=UTF-8',
           'Set-Cookie': `__session=${emailHex + '.' + signature}; Max-Age=3600; ${process.env.NODE_ENV !== 'development' ? 'Secure; ' : ''}HttpOnly; SameSite=Lax;`
         },
         body: await Eta.renderFile('_redirect.eta', { redirect: '/', message: 'Login com sucesso' }) as string
@@ -125,6 +129,9 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
 
     return {
       statusCode: 401,
+      headers: {
+        'Content-Type': 'text/html; charset=UTF-8'
+      },
       body: await Eta.renderFile('login.eta', { errorMessage: 'Email ou senha incorretos' }) as string
     }
   }
@@ -133,6 +140,7 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
     return {
       statusCode: 200,
       headers: {
+        'Content-Type': 'text/html; charset=UTF-8',
         'Set-Cookie': `__session=; Max-Age=0; ${process.env.NODE_ENV !== 'development' ? 'Secure; ' : ''}HttpOnly; SameSite=Lax;`
       },
       body: await Eta.renderFile('_redirect.eta', { redirect: '/login', message: 'Logout com sucesso' }) as string
@@ -161,16 +169,25 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
 
     if (!month && !year) return {
       statusCode: 200,
+      headers: {
+        'Content-Type': 'text/html; charset=UTF-8'
+      },
       body: await Eta.renderFile('home.eta', { email: userEmail }) as string
     }
 
     if (!month && year) return {
       statusCode: 200,
+      headers: {
+        'Content-Type': 'text/html; charset=UTF-8'
+      },
       body: await Eta.renderFile('home.eta', { email: userEmail, errorMessage: 'Selecione o mês', year }) as string
     }
 
     if (month && !year) return {
       statusCode: 200,
+      headers: {
+        'Content-Type': 'text/html; charset=UTF-8'
+      },
       body: await Eta.renderFile('home.eta', { email: userEmail, errorMessage: 'Selecione o ano', month }) as string
     }
 
@@ -213,6 +230,9 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
 
     return {
       statusCode: 200,
+      headers: {
+        'Content-Type': 'text/html; charset=UTF-8'
+      },
       body: await Eta.renderFile('home.eta', {
         email: userEmail,
         message: qos,
@@ -239,6 +259,9 @@ const handler = async (event: HandlerEvent, context: HandlerContext) => {
     console.error(error)
     return {
       statusCode: error.statusCode || 500,
+      headers: {
+        'Content-Type': 'text/html; charset=UTF-8'
+      },
       body: await Eta.renderFile('external.eta', { message: error.errorMessage || 'Erro interno do servidor' }) as string
     }
   }
