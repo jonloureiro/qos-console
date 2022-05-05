@@ -14,8 +14,8 @@
   <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32">
   <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16">
 
-  <link rel="prefetch" as="script" href="https://cdn.jsdelivr.net/npm/xlsx@0.18.2/dist/xlsx.core.min.js">
-  <link rel="prefetch" as="script" href="https://cdn.jsdelivr.net/npm/frappe-charts@1.2.4/dist/frappe-charts.min.iife.js">
+  <link rel="prefetch" as="script" href="https://cdn.sheetjs.com/xlsx-0.18.7/package/dist/xlsx.mini.min.js">
+  <link rel="prefetch" as="script" href="https://cdn.jsdelivr.net/npm/frappe-charts@1.6.2/dist/frappe-charts.min.umd.js">
 </head>
 
 <body class="bg-light">

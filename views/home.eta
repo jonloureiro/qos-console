@@ -44,7 +44,7 @@
             <% }%>
 
               <% if (it.sheet) { %>
-                <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.2/dist/xlsx.core.min.js"></script>
+                <script src="https://cdn.sheetjs.com/xlsx-0.18.7/package/dist/xlsx.mini.min.js"></script>
                 <script>
                   console.log([["<% ~it.sheet %>"]])
                   const workbook = XLSX.utils.book_new();
@@ -70,7 +70,7 @@
                   <div id="chart"></div>
                 </div>
               </div>
-              <script src="https://cdn.jsdelivr.net/npm/frappe-charts@1.2.4/dist/frappe-charts.min.iife.js"></script>
+              <script src="https://cdn.jsdelivr.net/npm/frappe-charts@1.6.2/dist/frappe-charts.min.umd.js"></script>
               <script>
                 const data = {
                   labels: ["Ruim", "Regular", "Excelente"],
