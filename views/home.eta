@@ -52,14 +52,21 @@
             <script>
               document.getElementById('btn-sheet').addEventListener('click', function(e) {
                 e.preventDefault()
-                const line0 = '<% ~it.sheet[0] %>'.split(',')
-                const line1 = '<% ~it.sheet[1] %>'.split(',')
-                const matrix = [line0, line1]
+                const lines = ',<% ~it.sheet.map(line => `${line}|`) %>'
+                  .split('|')
+                  .map(line => {
+                    const row = line.split(',')
+                    row.shift()
+                    return row
+                  })
+
+                const worksheet = XLSX.utils.aoa_to_sheet(lines)
+
                 const workbook = XLSX.utils.book_new();
-                const worksheet = XLSX.utils.aoa_to_sheet(matrix)
-                workbook.SheetNames.push('qos-console');
-                workbook.Sheets['qos-console'] = worksheet
-                XLSX.writeFile(workbook, 'qos-console.xlsx')
+                workbook.SheetNames.push('Resumo por dia');
+                workbook.Sheets['Resumo por dia'] = worksheet
+
+                XLSX.writeFile(workbook, '<% ~it.year %>-<% ~it.month %>_qos-console.xlsx')
               })
             </script>
           <% }%>
@@ -80,7 +87,7 @@
           <script src="https://cdn.jsdelivr.net/npm/frappe-charts@1.6.2/dist/frappe-charts.min.umd.js"></script>
           <script>
             const data = {
-              labels: ["Ruim", "Regular", "Excelente"],
+              labels: ["Regular", "Bom", "Ótimo"],
               datasets: [
                 {
                   values: [<% ~it.values %>]

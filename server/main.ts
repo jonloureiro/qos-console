@@ -235,10 +235,49 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
       }
     }, [0, 0, 0])
 
-    const sheet = [
-      ["RUIM", "REGULAR", "EXCELENTE"],
-      qos
-    ]
+    const orderedItems = items.sort((a, b) => {
+      const dataA = +a.data.S.split("-")[0];
+      const dataB = +b.data.S.split("-")[0];
+      return dataA - dataB;
+    });
+
+    const sheet = orderedItems.reduce(
+      (previousValue, currentValue) => {
+        const index = previousValue.findIndex(
+          (row) => row[0] === currentValue.data.S
+        );
+        if (index === -1) {
+          switch (currentValue.qos.S) {
+            case "RUIM":
+              previousValue.push([currentValue.data.S, 1, 0, 0]);
+              return previousValue;
+            case "REGULAR":
+              previousValue.push([currentValue.data.S, 0, 1, 0]);
+              return previousValue;
+            case "EXCELENTE":
+              previousValue.push([currentValue.data.S, 0, 0, 1]);
+              return previousValue;
+            default:
+              return previousValue;
+          }
+        } else {
+          switch (currentValue.qos.S) {
+            case "RUIM":
+              previousValue[index][1]++;
+              return previousValue;
+            case "REGULAR":
+              previousValue[index][2]++;
+              return previousValue;
+            case "EXCELENTE":
+              previousValue[index][3]++;
+              return previousValue;
+            default:
+              return previousValue;
+          }
+        }
+      },
+      [["DATA", "REGULAR", "BOM", "ÓTIMO"]]
+    );
 
     return {
       statusCode: 200,
