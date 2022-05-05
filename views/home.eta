@@ -39,56 +39,63 @@
           </select>
           <button type="submit my-1 mr-2"
             class="btn btn-info my-1 mr-2 before:content-[url('/assets/icons/search.svg')]">Consultar</button>
+          <% if (it.sheet) { %>
+            <button id="btn-sheet"
+              class="btn bg-verde2 my-1 mr-2 before:content-[url('/assets/icons/download.svg')]">Planilha</button>
+          <% }%>
           <% if (it.month && it.year) {%>
             <a href="/" class="btn btn-warning my-1 mr-2 before:content-[url('/assets/icons/trash.svg')]">Limpar</a>
-            <% }%>
+          <% }%>
 
-              <% if (it.sheet) { %>
-                <script src="https://cdn.sheetjs.com/xlsx-0.18.7/package/dist/xlsx.mini.min.js"></script>
-                <script>
-                  console.log([["<% ~it.sheet %>"]])
-                  const workbook = XLSX.utils.book_new();
-                  const worksheet = XLSX.utils.aoa_to_sheet(
-                    [["<% ~it.sheet %>"]] //TODO: tratar esses dados corretamente
-                  )
-                  workbook.SheetNames.push("qos-console");
-                  workbook.Sheets["qos-console"] = worksheet
-                  //XLSX.writeFile(workbook, 'qos-console.xlsx')
-                </script>
-                <% }%>
+          <% if (it.sheet) { %>
+            <script src="https://cdn.sheetjs.com/xlsx-0.18.7/package/dist/xlsx.mini.min.js"></script>
+            <script>
+              document.getElementById('btn-sheet').addEventListener('click', function(e) {
+                e.preventDefault()
+                const line0 = '<% ~it.sheet[0] %>'.split(',')
+                const line1 = '<% ~it.sheet[1] %>'.split(',')
+                const matrix = [line0, line1]
+                const workbook = XLSX.utils.book_new();
+                const worksheet = XLSX.utils.aoa_to_sheet(matrix)
+                workbook.SheetNames.push('qos-console');
+                workbook.Sheets['qos-console'] = worksheet
+                XLSX.writeFile(workbook, 'qos-console.xlsx')
+              })
+            </script>
+          <% }%>
         </form>
         <% if (it.errorMessage) { %>
           <p class="text-sm font-bold text-error mb-4">
             <%~ it.errorMessage %>
           </p>
-          <% } %>
-            <br>
+        <% } %>
+        <br>
 
-            <% if (it.values) { %>
-              <div class="flex justify-center">
-                <div class="w-80 sm:w-96">
-                  <div id="chart"></div>
-                </div>
-              </div>
-              <script src="https://cdn.jsdelivr.net/npm/frappe-charts@1.6.2/dist/frappe-charts.min.umd.js"></script>
-              <script>
-                const data = {
-                  labels: ["Ruim", "Regular", "Excelente"],
-                  datasets: [
-                    {
-                      values: [<% ~it.values %>]
-                    }
-                  ]
+        <% if (it.values) { %>
+          <div class="flex justify-center">
+            <div class="w-80 sm:w-96">
+              <div id="chart"></div>
+            </div>
+          </div>
+          <script src="https://cdn.jsdelivr.net/npm/frappe-charts@1.6.2/dist/frappe-charts.min.umd.js"></script>
+          <script>
+            const data = {
+              labels: ["Ruim", "Regular", "Excelente"],
+              datasets: [
+                {
+                  values: [<% ~it.values %>]
                 }
+              ]
+            }
 
-                const chart = new frappe.Chart("#chart", {
-                  data: data,
-                  type: 'pie',
-                  height: 384,
-                  colors: ['#ED4C54', '#f4a261', '#61ce70']
-                })
-              </script>
-              <% } %>
+            const chart = new frappe.Chart("#chart", {
+              data: data,
+              type: 'pie',
+              height: 384,
+              colors: ['#ED4C54', '#f4a261', '#61ce70']
+            })
+          </script>
+        <% } %>
       </div>
     </main>
   </div>
