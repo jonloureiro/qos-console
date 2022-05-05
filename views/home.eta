@@ -60,11 +60,22 @@
                     return row
                   })
 
+                const lines2 = ',<% ~it.sheet2.map(line => `${line}|`) %>'
+                .split('|')
+                .map(line => {
+                  const row = line.split(',')
+                  row.shift()
+                  return row
+                })
+
                 const worksheet = XLSX.utils.aoa_to_sheet(lines)
+                const worksheet2 = XLSX.utils.aoa_to_sheet(lines2)
 
                 const workbook = XLSX.utils.book_new();
                 workbook.SheetNames.push('Resumo por dia');
                 workbook.Sheets['Resumo por dia'] = worksheet
+                workbook.SheetNames.push('Geral');
+                workbook.Sheets['Geral'] = worksheet2
 
                 XLSX.writeFile(workbook, '<% ~it.year %>-<% ~it.month %>_qos-console.xlsx')
               })

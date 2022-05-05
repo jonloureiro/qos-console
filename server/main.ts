@@ -238,6 +238,17 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
     const orderedItems = items.sort((a, b) => {
       const dataA = +a.data.S.split("-")[0];
       const dataB = +b.data.S.split("-")[0];
+      if (dataA === dataB) {
+        const hourA = +a.hora.S
+          .split(":")
+          .map(el => el.padStart(2, "0"))
+          .join();
+        const hourB = +b.hora.S
+          .split(":")
+          .map(el => el.padStart(2, "0"))
+          .join();
+        return hourA - hourB;
+      }
       return dataA - dataB;
     });
 
@@ -279,6 +290,37 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
       [["DATA", "REGULAR", "BOM", "ÓTIMO"]]
     );
 
+    const sheet2 = orderedItems.reduce(
+      (previousValue, currentValue) => {
+        let voto: string;
+
+        switch (currentValue.qos.S) {
+          case "RUIM":
+            voto = "REGULAR"
+            break
+          case "REGULAR":
+            voto = "BOM"
+            break
+          case "EXCELENTE":
+            voto = "ÓTIMO"
+            break
+          default:
+            voto = ""
+            break
+        }
+
+        previousValue.push([
+          currentValue.data.S,
+          currentValue.hora.S,
+          voto,
+          currentValue.device_id.S,
+          currentValue.registry.N
+        ])
+        return previousValue
+      },
+      [["DATA", "HORA", "VOTO", "DISPOSITIVO", "REGISTRO"]]
+    );
+
     return {
       statusCode: 200,
       headers: {
@@ -288,6 +330,7 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
         email: userEmail,
         values: qos,
         sheet,
+        sheet2,
         year,
         month
       }) as string
