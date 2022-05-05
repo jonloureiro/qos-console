@@ -38,12 +38,12 @@ const user5: User | undefined = (process.env.USER5_EMAIL && process.env.USER5_PA
     }
   : undefined
 
-const users: User[] = [
-  user1,
-  user2,
-  user3,
-  user4,
-  user5
-]
+const users: User[] = []
+
+if (user1) users.push(user1)
+if (user2) users.push(user2)
+if (user3) users.push(user3)
+if (user4) users.push(user4)
+if (user5) users.push(user5)
 
 export default users
