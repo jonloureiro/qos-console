@@ -38,6 +38,8 @@ const client = new DynamoDBClient({
 const privateKey = Buffer.from(process.env.PRIVATE_KEY!, 'base64').toString()
 const publicKey = Buffer.from(process.env.PUBLIC_KEY!, 'base64').toString()
 
+const loginDurationInSeconds = Number(process.env.LOGIN_DURATION) || 60 * 60
+
 const main = async (event: HandlerEvent, context: HandlerContext) => {
   let userEmail: string | undefined
   if (event.headers.cookie) {
@@ -59,23 +61,26 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
         }
       }
 
-      const [emailHex, signature] = cookieValue.split('.')
+      const [cookieContentInHex, signature] = cookieValue.split('.')
 
-      if (!emailHex || !signature) {
+      if (!cookieContentInHex || !signature) {
         throw {
           statusCode: 400,
           errorMessage: 'Cookie inválido',
-          message: `emailBase64 ${emailHex}; signature ${signature}`
+          message: `cookie content ${cookieContentInHex}; signature ${signature}`
         }
       }
 
-      const email = Buffer.from(emailHex, 'hex').toString()
+      const cookieContent = Buffer.from(cookieContentInHex, 'hex').toString()
 
       const verifier = createVerify('rsa-sha256')
-      verifier.update(email)
+      verifier.update(cookieContent)
       const hasUser = verifier.verify(publicKey, signature, 'hex')
       if (hasUser) {
-        userEmail = email
+        const [cookieDuration, ...email] = cookieContent.split(':')
+        if (+cookieDuration > Date.now()) {
+          userEmail = email.join(':')
+        }
       }
     }
   }
@@ -112,16 +117,18 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
     const user = users.find(user => (user && user.email === emailValue))
 
     if (user && user.password === passwordValue) {
+      const cookieDuration = Date.now() + (loginDurationInSeconds * 1000)
+      const cookieContent = `${cookieDuration}:${user.email}`
       const signer = createSign('rsa-sha256')
-      signer.update(user.email)
+      signer.update(cookieContent)
       const signature = signer.sign(privateKey, 'hex')
-      const emailHex = Buffer.from(user.email).toString('hex')
+      const cookieContentInHex = Buffer.from(cookieContent).toString('hex')
 
       return {
         statusCode: 200,
         headers: {
           'Content-Type': 'text/html; charset=UTF-8',
-          'Set-Cookie': `__session=${emailHex + '.' + signature}; Max-Age=3600; ${process.env.NODE_ENV !== 'development' ? 'Secure; ' : ''}HttpOnly; SameSite=Lax;`
+          'Set-Cookie': `__session=${cookieContentInHex + '.' + signature}; Max-Age=${loginDurationInSeconds}; ${process.env.NODE_ENV !== 'development' ? 'Secure; ' : ''}HttpOnly; SameSite=Lax;`
         },
         body: await Eta.renderFile('_redirect.eta', { redirect: '/', message: 'Login com sucesso' }) as string
       }
