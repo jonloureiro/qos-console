@@ -41,7 +41,7 @@
             class="btn btn-info my-1 mr-2 before:content-[url('/assets/icons/search.svg')]">Consultar</button>
           <% if (it.sheet) { %>
             <button id="btn-sheet"
-              class="btn bg-verde2 my-1 mr-2 before:content-[url('/assets/icons/download.svg')]">Planilha</button>
+              class="btn bg-verde2 hover:bg-verde2 my-1 mr-2 before:content-[url('/assets/icons/download.svg')]">Planilha</button>
           <% }%>
           <% if (it.month && it.year) {%>
             <a href="/" class="btn btn-warning my-1 mr-2 before:content-[url('/assets/icons/trash.svg')]">Limpar</a>
