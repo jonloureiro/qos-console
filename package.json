@@ -7,17 +7,18 @@
     "lint": "ts-standard --fix"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.52.0",
+    "@aws-sdk/client-dynamodb": "^3.82.0",
     "@netlify/functions": "^1.0.0",
     "daisyui": "^1.25.4",
-    "eta": "^1.12.3"
+    "eta": "^1.12.3",
+    "netlify-cli": "^10.2.0"
   },
   "devDependencies": {
-    "@types/node": "^17.0.18",
+    "@types/node": "^17.0.31",
     "cross-env": "^7.0.3",
-    "tailwindcss": "^3.0.23",
+    "tailwindcss": "^3.0.24",
     "ts-standard": "^11.0.0",
-    "typescript": "^4.5.5"
+    "typescript": "^4.6.4"
   },
   "ts-standard": {
     "rules": {
