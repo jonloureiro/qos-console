@@ -242,11 +242,11 @@ const main = async (event: HandlerEvent, context: HandlerContext) => {
         const hourA = +a.hora.S
           .split(":")
           .map(el => el.padStart(2, "0"))
-          .join();
+          .join('');
         const hourB = +b.hora.S
           .split(":")
           .map(el => el.padStart(2, "0"))
-          .join();
+          .join('');
         return hourA - hourB;
       }
       return dataA - dataB;
